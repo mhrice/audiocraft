@@ -1,0 +1,10 @@
+# @package __global__
+
+datasource:
+  max_sample_rate: 44100
+  max_channels: 2
+
+  train: egs/soundsauce_starter/train
+  valid: egs/soundsauce_starter/valid
+  evaluate: egs/soundsauce_starter/train
+  generate: egs/soundsauce_starter/train
