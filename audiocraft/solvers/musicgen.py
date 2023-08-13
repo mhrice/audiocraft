@@ -537,6 +537,8 @@ class MusicGenSolver(base.StandardSolver):
                         **self.generation_params)
                     gen_unprompted_audio = gen_unprompted_outputs['gen_audio'].cpu()
                     rtf = gen_unprompted_outputs['rtf']
+                for i, audio in enumerate(gen_unprompted_audio):
+                    self.log_audio(generate_stage_name, f'unprompted_audio_{i}', audio, self.cfg.sample_rate)
                 sample_manager.add_samples(
                     gen_unprompted_audio, self.epoch, hydrated_conditions,
                     ground_truth_wavs=audio, generation_args=sample_generation_params)
@@ -547,6 +549,8 @@ class MusicGenSolver(base.StandardSolver):
                     **self.generation_params)
                 gen_audio = gen_outputs['gen_audio'].cpu()
                 prompt_audio = gen_outputs['prompt_audio'].cpu()
+                for i, audio in enumerate(gen_audio):
+                    self.log_audio(generate_stage_name, f'prompted_audio_{i}', audio, self.cfg.sample_rate)
                 sample_manager.add_samples(
                     gen_audio, self.epoch, hydrated_conditions,
                     prompt_wavs=prompt_audio, ground_truth_wavs=audio,

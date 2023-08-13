@@ -5,15 +5,15 @@
 defaults:
   - musicgen/default
   - /model: lm/musicgen_lm
-  - override /model/lm/model_scale: xsmall
   - override /dset: audio/soundsauce_starter
   - _self_
 
-autocast: false
+autocast: true
+autocast_dtype: float16
 compression_model_checkpoint: //pretrained/facebook/encodec_32khz
 transformer_lm:
   n_q: 4
-  card: 400
+  card: 2048
 
 codebooks_pattern:
   modeling: parallel
@@ -25,7 +25,7 @@ deadlock:
   use: true  # deadlock detection
 
 dataset:
-  batch_size: 4
+  batch_size: 8
   segment_duration: 5
   sample_on_weight: false  # Uniform sampling all the way
   sample_on_duration: false  # Uniform sampling all the way
@@ -34,9 +34,10 @@ generate:
   audio:
     strategy: peak
   lm:
-    use_sampling: false
-    top_k: 0
+    use_sampling: true
+    top_k: 250
     top_p: 0.0
+    gen_duration: 5
 
 checkpoint:
   save_every: 10
@@ -52,7 +53,9 @@ optim:
     device: cuda
 
 logging:
-  log_tensorboard: true
+  log_wandb: true
+wandb:
+  project: audiocraft
 
 schedule:
   lr_scheduler: cosine
