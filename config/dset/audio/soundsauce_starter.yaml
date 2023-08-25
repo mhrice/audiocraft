@@ -6,5 +6,5 @@ datasource:
 
   train: egs/soundsauce_starter/train
   valid: egs/soundsauce_starter/valid
-  evaluate: egs/soundsauce_starter/train
-  generate: egs/soundsauce_starter/train
+  evaluate: egs/soundsauce_starter/valid
+  generate: egs/soundsauce_starter/valid
