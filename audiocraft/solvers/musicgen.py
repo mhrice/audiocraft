@@ -539,7 +539,7 @@ class MusicGenSolver(base.StandardSolver):
                     rtf = gen_unprompted_outputs['rtf']
                 attributes = [x.to_condition_attributes() for x in meta]
                 for i, audio_f in enumerate(gen_unprompted_audio):
-                    prompt_summary = attributes[i].text["description"][:50]
+                    prompt_summary = attributes[i].text["description"][:50].replace(" ", "_").replace("\n", "_").replace("\"", "")
                     self.log_audio(generate_stage_name, f'unprompted_{prompt_summary}_{i}', audio_f, self.cfg.sample_rate)
                 sample_manager.add_samples(
                     gen_unprompted_audio, self.epoch, hydrated_conditions,
