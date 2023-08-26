@@ -1,0 +1,70 @@
+### Matt Notes
+1. pip install wandb
+
+#### Create dataset
+1. Audio files + json in dir
+2. Run `python -m audiocraft.data.audio_dataset {dataset_location} egs/soundsauce_starter/{train/valid/test}/data.jsonl`
+python -m audiocraft.data.audio_dataset data/soundsauce_starter/ egs/soundsauce_starter/train/data.jsonl
+
+python -m audiocraft.data.audio_dataset data/train/ egs/soundsauce_starter/train/data.jsonl
+python -m audiocraft.data.audio_dataset data/valid/ egs/soundsauce_starter/valid/data.jsonl
+
+
+# Total Files = 222
+####Running
+dora run solver=musicgen/soundsauce model/lm/model_scale=xsmall
+
+### Finetune
+dora run solver=musicgen/soundsauce continue_from=//pretrained/facebook/musicgen-small model/lm/model_scale=small
+
+Copy data
+scp -o 'ProxyJump ec22177@login.eecs.qmul.ac.uk' data/soundsauce_starter ec22177@prospero:~
+
+restore=False?
+# Generate only
+dora run solver=musicgen/soundsauce execute_only=generate execute_inplace=True
+
+1. What is the loss term? How to interprete CE loss and PPL and duration.
+CE = cross entropy
+PPL = perplexity
+https://planspace.org/2013/09/23/perplexity-what-it-is-and-what-yours-is/
+
+2. Why is validation loss (both CE and PPL) always going up?
+Perhaps bug in splitting code
+3. Need to have a separate run per training session, otherwise I think it is using the same best checkpoint
+This is issue with dora/flashy logging to wandb
+5. How does the generation actually work?
+By default, uses generation dataset specified in dset config for prompts/audios. 
+Unprompted vs prompted are the same??
+
+Currently doing text-only generation
+(need to set self.cfg.generate.lm.prompt_duration for audio prompting)
+6. Why do we have only 1 eval metric logged?
+self.cfg.evaluate.metrics needs to be enabled. 
+
+4. What data is being used for train/val? How does it sample sections?
+- Bug in copy train (not copy json)
+- Merges other fields from json with probability 0.25 
+
+Full files:
+Loading 32 files: 1.906s
+Full 222 files: 12.393s
+
+5s cut files:
+Loading 32 files: 1.556s
+Full 22 files: 10.607s
+
+Got everything working on vast.ai server (~$0.50 per hour for A40 GPU)
+
+Dora Signature based on config (this is why it is same every time?) 
+- Can debug this later
+- May need to hack wandb file (remove id from 227 in flashy/loggers/wandb.py)
+
+`Token indices sequence length is longer than the specified maximum sequence length for this model (1018`
+- perhaps too long of text?
+
+
+
+
+Batch size = 32 on 48GB GPU (can probably go to 64)
+Currently with settings (see vast_start.txt) taking ~25min per epoch (1x RTX A6000)
