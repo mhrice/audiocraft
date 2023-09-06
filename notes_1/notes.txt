@@ -68,3 +68,9 @@ Dora Signature based on config (this is why it is same every time?)
 
 Batch size = 32 on 48GB GPU (can probably go to 64)
 Currently with settings (see vast_start.txt) taking ~25min per epoch (1x RTX A6000)
+
+Need a lot of memory?? > 40 GB for 30 epochs maybe need to increase save frequency
+
+Try:
+Longer clips/generations (maybe 10/15s)?
+Demucs beforehand?

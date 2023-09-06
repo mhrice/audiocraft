@@ -20,6 +20,5 @@ python -m audiocraft.data.audio_dataset data/valid egs/soundsauce_starter/valid/
 export USER='soundsauce'
 wandb login 0572060962d693913ba75ced5fd5a7e415d6e5a8
 
-dora run solver=musicgen/soundsauce continue_from=//pretrained/facebook/musicgen-small conditioner=text2music model/lm/model_scale=small generate.every=1
 
-dora run solver=musicgen/soundsauce continue_from=//pretrained/facebook/musicgen-small conditioner=text2music model/lm/model_scale=small generate.every=1 dataset.batch_size=32 dataset.num_workers=4 optim.updates_per_epoch=500 dataset.generate.num_samples=8 generate.lm.prompted_samples=false
+dora run solver=musicgen/soundsauce continue_from=//pretrained/facebook/musicgen-small conditioner=text2music model/lm/model_scale=small generate.every=2
