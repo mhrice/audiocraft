@@ -5,12 +5,13 @@ import string
 from pathlib import Path
 import sys
 import json
+from tqdm import tqdm
 
-nltk.download("stopwords")
-stop_words = set(stopwords.words("english"))
+# nltk.download("stopwords")
+# stop_words = set(stopwords.words("english"))
 
 
-def fix_description(sentence):
+def fix_description_old(sentence):
     filtered_sentence = [w for w in sentence.split(" ") if not w.lower() in stop_words]
     no_punct = [
         s.translate(str.maketrans("", "", string.punctuation))
@@ -22,13 +23,22 @@ def fix_description(sentence):
     return description
 
 
+def fix_description(data):
+    title = data["title"].replace("(FREE) Drake Type Beat - \"" , "").replace("\"", "")
+    description = title + " " + data["artist"] + " " + data["genre"] + " " + data["instrument"]
+    return description
+
+
+
 if __name__ == "__main__":
     root = Path(sys.argv[1])
     metadata_files = list(root.rglob("**/*.json"))
-    for f in metadata_files:
+    for f in tqdm(metadata_files):
         with open(f, "r") as json_file:
             data = json.load(json_file)
-            description = data["description"]
-            data["description"] = fix_description(description)
+            data["description"] = fix_description(data)
+            # description = data["description"]
+            # data["description"] = fix_description_old(description)
         with open(f, "w") as json_file:
             json.dump(data, json_file, indent=4)
+    print("DONE fixing descriptions")
