@@ -26,10 +26,12 @@ deadlock:
 
 dataset:
   num_workers: 4
-  batch_size: 8
-  segment_duration: 5
+  batch_size: 32
+  segment_duration: 12
   sample_on_weight: false  # Uniform sampling all the way
   sample_on_duration: false  # Uniform sampling all the way
+  generate:
+    num_samples: 8
 
 generate:
   audio:
@@ -38,7 +40,8 @@ generate:
     use_sampling: true
     top_k: 250
     top_p: 0.0
-    gen_duration: 5
+    gen_duration: 12
+    prompted_samples: false
 
 checkpoint:
   save_every: 10
@@ -52,6 +55,7 @@ optim:
     use: true
     updates: 10
     device: cuda
+  updates_per_epoch: 500
 
 logging:
   log_wandb: true
