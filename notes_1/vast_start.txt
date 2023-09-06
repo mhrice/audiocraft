@@ -1,7 +1,7 @@
 git clone https://github.com/mhrice/audiocraft.git
 cd audiocraft
 pip install -r requirements.txt
-pip install wandb gdown
+pip install wandb gdown nltk
 sed -i '141s/.*/        self.log_metrics(prefix, metrics, step)/' /opt/conda/lib/python3.10/site-packages/flashy/loggers/wandb.py
 sed -i '65d' /opt/conda/lib/python3.10/site-packages/flashy/loggers/wandb.py
 gdown 1VIzTTZ7Qjp8WFR54qI_zgNKbC__3M1q4
@@ -13,6 +13,7 @@ cd data/DRAKE_TYPE_BEAT_2023_1
 unzip DRAKE_TYPE_BEAT_2023_1.zip
 rm -f DRAKE_TYPE_BEAT_2023_1.zip
 cd ../..
+python fix_description.py data/DRAKE_TYPE_BEAT_2023_1
 python train_val_split.py data/DRAKE_TYPE_BEAT_2023_1 
 mkdir egs/soundsauce_starter
 python -m audiocraft.data.audio_dataset data/train egs/soundsauce_starter/train/data.jsonl
